@@ -51,12 +51,12 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
             {/* Sidebar Container */}
             <div
                 className={cn(
-                    "fixed md:static inset-y-0 left-0 z-40 w-64 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 flex flex-col text-zinc-900 dark:text-zinc-100 transition-transform duration-300 ease-in-out shadow-xl md:shadow-none",
+                    "fixed md:static inset-y-0 left-0 z-40 w-64 bg-neutral-100 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 flex flex-col h-full text-neutral-900 dark:text-neutral-100 transition-transform duration-300 ease-in-out shadow-xl md:shadow-none",
                     isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
                 )}
             >
                 {/* Header */}
-                <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+                <div className="p-6 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-zinc-900 dark:bg-white rounded-lg flex items-center justify-center">
                             <span className="text-white dark:text-black font-bold text-xl">G</span>
@@ -130,7 +130,7 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
                 </nav>
 
                 {/* Bottom Section - User Profile Dropdown */}
-                <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 relative">
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-800 relative">
                     {user ? (
                         <div className="relative">
                             <AnimatePresence>
