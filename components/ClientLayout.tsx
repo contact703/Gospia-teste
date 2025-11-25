@@ -4,12 +4,10 @@ import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { SongGenerator } from './SongGenerator';
 import { useUser } from '@/context/UserContext';
-import { useRouter } from 'next/navigation';
 
 export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     const [isSongGenOpen, setIsSongGenOpen] = useState(false);
     const { tier } = useUser();
-    const router = useRouter();
 
     const handleOpenSongGen = () => {
         if (tier === 'Free') {
@@ -24,9 +22,9 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <div className="flex h-screen bg-black text-zinc-100 overflow-hidden w-full">
+        <div className="flex h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 overflow-hidden w-full flex-col md:flex-row transition-colors duration-300">
             <Sidebar onOpenSongGenerator={handleOpenSongGen} />
-            <main className="flex-1 relative overflow-hidden flex flex-col">
+            <main className="flex-1 relative overflow-hidden flex flex-col w-full h-full">
                 {children}
             </main>
             <SongGenerator isOpen={isSongGenOpen} onClose={() => setIsSongGenOpen(false)} />

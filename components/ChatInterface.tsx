@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Mic, Volume2, Lock, ChevronDown, Crown } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Send, Mic, Volume2, Lock } from 'lucide-react';
 import { useUser } from '@/context/UserContext';
 import { generateMockResponse } from '@/lib/chatLogic';
 import { AuthModal } from './AuthModal';
 import { cn } from '@/lib/utils';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
-import { PASTORS } from '@/lib/personas';
+import { ChatHeader } from './ChatHeader';
 
 interface Message {
     id: string;
@@ -18,7 +18,7 @@ interface Message {
 }
 
 export const ChatInterface = () => {
-    const { user, selectedPastor, switchPastor, tier } = useUser();
+    const { user, selectedPastor } = useUser();
     const [messages, setMessages] = useState<Message[]>([
         {
             id: 'welcome',
@@ -29,7 +29,6 @@ export const ChatInterface = () => {
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-    const [isPastorDropdownOpen, setIsPastorDropdownOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const { isListening, transcript, startListening, stopListening, resetTranscript, hasRecognitionSupport } = useSpeechRecognition();
@@ -74,7 +73,7 @@ export const ChatInterface = () => {
                 content: `Olá! Sou o ${selectedPastor.name}. ${selectedPastor.description} Como posso te ajudar hoje?`
             }]);
         }
-    }, [selectedPastor]);
+    }, [selectedPastor, messages.length]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -124,69 +123,9 @@ export const ChatInterface = () => {
         }
     };
 
-    const handlePastorSelect = (pastorId: string) => {
-        const success = switchPastor(pastorId);
-        if (!success) {
-            // If blocked, maybe show a toast or alert. 
-            // Since switchPastor returns false, we know it failed.
-            alert("Upgrade para o GospIA Pro para desbloquear este pastor!");
-        }
-        setIsPastorDropdownOpen(false);
-    };
-
     return (
         <div className="flex flex-col h-full max-w-4xl mx-auto w-full relative">
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-zinc-800 bg-black/50 backdrop-blur-md z-20">
-                <div className="relative">
-                    <button
-                        onClick={() => setIsPastorDropdownOpen(!isPastorDropdownOpen)}
-                        className="flex items-center gap-2 text-lg font-semibold text-white hover:text-zinc-300 transition-colors"
-                    >
-                        {selectedPastor.name}
-                        <ChevronDown size={16} className={`transition-transform ${isPastorDropdownOpen ? 'rotate-180' : ''}`} />
-                    </button>
-
-                    <AnimatePresence>
-                        {isPastorDropdownOpen && (
-                            <>
-                                <div
-                                    className="fixed inset-0 z-10"
-                                    onClick={() => setIsPastorDropdownOpen(false)}
-                                />
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl overflow-hidden z-20"
-                                >
-                                    {PASTORS.map((pastor) => {
-                                        const isLocked = pastor.tier === 'Pro' && tier === 'Free';
-                                        return (
-                                            <button
-                                                key={pastor.id}
-                                                onClick={() => handlePastorSelect(pastor.id)}
-                                                className={cn(
-                                                    "w-full flex items-center justify-between px-4 py-3 text-sm transition-colors border-b border-zinc-800/50 last:border-0",
-                                                    selectedPastor.id === pastor.id
-                                                        ? "bg-zinc-800 text-white"
-                                                        : "text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
-                                                )}
-                                            >
-                                                <span className="flex items-center gap-2">
-                                                    {pastor.name}
-                                                    {pastor.tier === 'Pro' && !isLocked && <Crown size={12} className="text-amber-500" />}
-                                                </span>
-                                                {isLocked && <Lock size={14} className="text-zinc-600" />}
-                                            </button>
-                                        );
-                                    })}
-                                </motion.div>
-                            </>
-                        )}
-                    </AnimatePresence>
-                </div>
-            </div>
+            <ChatHeader />
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -202,10 +141,10 @@ export const ChatInterface = () => {
                     >
                         <div
                             className={cn(
-                                "max-w-[80%] rounded-2xl p-4 text-sm md:text-base leading-relaxed whitespace-pre-wrap",
+                                "max-w-[80%] rounded-2xl p-4 text-sm md:text-base leading-relaxed whitespace-pre-wrap shadow-sm",
                                 msg.role === 'user'
-                                    ? "bg-zinc-800 text-white rounded-br-none"
-                                    : "bg-zinc-900/50 border border-zinc-800 text-zinc-100 rounded-bl-none"
+                                    ? "bg-zinc-900 dark:bg-zinc-800 text-white rounded-br-none"
+                                    : "bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-bl-none"
                             )}
                         >
                             {msg.role === 'assistant' && (
@@ -224,10 +163,10 @@ export const ChatInterface = () => {
                         animate={{ opacity: 1 }}
                         className="flex justify-start w-full"
                     >
-                        <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl rounded-bl-none p-4 flex items-center gap-2 text-zinc-400 text-sm">
-                            <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                            <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                            <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <div className="bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl rounded-bl-none p-4 flex items-center gap-2 text-zinc-500 dark:text-zinc-400 text-sm shadow-sm">
+                            <div className="w-2 h-2 bg-zinc-400 dark:bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                            <div className="w-2 h-2 bg-zinc-400 dark:bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                            <div className="w-2 h-2 bg-zinc-400 dark:bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                             <span className="ml-2">GospIA está buscando uma palavra...</span>
                         </div>
                     </motion.div>
@@ -236,16 +175,16 @@ export const ChatInterface = () => {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-zinc-800 bg-black/50 backdrop-blur-md">
-                <div className="relative flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-xl p-2 focus-within:border-zinc-600 transition-colors">
+            <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-black/50 backdrop-blur-md transition-colors duration-300">
+                <div className="relative flex items-center gap-2 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-2 focus-within:border-zinc-400 dark:focus-within:border-zinc-600 transition-colors">
 
                     {/* Locked Overlay if not auth */}
                     {!user && (
                         <div
-                            className="absolute inset-0 bg-black/60 z-10 flex items-center justify-center rounded-xl cursor-pointer backdrop-blur-[1px]"
+                            className="absolute inset-0 bg-white/60 dark:bg-black/60 z-10 flex items-center justify-center rounded-xl cursor-pointer backdrop-blur-[1px]"
                             onClick={() => setIsAuthModalOpen(true)}
                         >
-                            <div className="flex items-center gap-2 text-white font-medium bg-zinc-800 px-4 py-2 rounded-full shadow-lg hover:bg-zinc-700 transition-colors">
+                            <div className="flex items-center gap-2 text-white font-medium bg-zinc-900 dark:bg-zinc-800 px-4 py-2 rounded-full shadow-lg hover:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors">
                                 <Lock size={16} />
                                 Entrar para conversar
                             </div>
@@ -255,8 +194,8 @@ export const ChatInterface = () => {
                     <button
                         onClick={handleMicClick}
                         className={cn(
-                            "p-2 transition-colors rounded-lg hover:bg-zinc-800",
-                            isListening ? "text-red-500 animate-pulse" : "text-zinc-400 hover:text-white"
+                            "p-2 transition-colors rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800",
+                            isListening ? "text-red-500 animate-pulse" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                         )}
                         disabled={!hasRecognitionSupport}
                         title={hasRecognitionSupport ? "Falar" : "Navegador não suporta reconhecimento de voz"}
@@ -269,7 +208,7 @@ export const ChatInterface = () => {
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder={user ? "Digite sua mensagem..." : "Faça login para começar..."}
-                        className="flex-1 bg-transparent text-white placeholder-zinc-500 focus:outline-none resize-none max-h-32 py-2"
+                        className="flex-1 bg-transparent text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none resize-none max-h-32 py-2"
                         rows={1}
                         disabled={!user}
                     />
@@ -277,8 +216,8 @@ export const ChatInterface = () => {
                     <button
                         onClick={handleSpeakerClick}
                         className={cn(
-                            "p-2 transition-colors rounded-lg hover:bg-zinc-800",
-                            isSpeaking ? "text-green-500" : "text-zinc-400 hover:text-white"
+                            "p-2 transition-colors rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800",
+                            isSpeaking ? "text-green-500" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                         )}
                         disabled={!hasSynthesisSupport}
                         title={hasSynthesisSupport ? "Ouvir última mensagem" : "Navegador não suporta síntese de voz"}
@@ -289,12 +228,12 @@ export const ChatInterface = () => {
                     <button
                         onClick={handleSendMessage}
                         disabled={!inputValue.trim() || isLoading}
-                        className="p-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-2 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <Send size={20} />
                     </button>
                 </div>
-                <div className="text-center mt-2 text-xs text-zinc-600">
+                <div className="text-center mt-2 text-xs text-zinc-500 dark:text-zinc-600">
                     GospIA pode cometer erros. Considere verificar informações importantes.
                 </div>
             </div>
