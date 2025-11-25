@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/context/UserContext';
 import { PastorTier } from '@/lib/personas';
 import { Check, Crown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -17,6 +18,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [selectedTier, setSelectedTier] = useState<PastorTier>('Free');
+    const router = useRouter();
 
     const handleDetailsSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,8 +32,14 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     };
 
     const handleFinalSubmit = () => {
-        login(name, email, selectedTier);
-        // We don't need to close manually if the parent component handles visibility based on user state
+        if (selectedTier === 'Free') {
+            login(name, email, 'Free');
+            router.push('/chat');
+        } else {
+            // For Pro, we start as Free and redirect to pricing to complete upgrade
+            login(name, email, 'Free');
+            router.push('/pricing');
+        }
     };
 
     if (!isOpen) return null;
@@ -86,8 +94,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                             <div
                                 onClick={() => handleTierSelect('Free')}
                                 className={`p-4 rounded-lg border cursor-pointer transition-all ${selectedTier === 'Free'
-                                        ? 'bg-zinc-800 border-white'
-                                        : 'bg-zinc-950 border-zinc-800 hover:border-zinc-700'
+                                    ? 'bg-zinc-800 border-white'
+                                    : 'bg-zinc-950 border-zinc-800 hover:border-zinc-700'
                                     }`}
                             >
                                 <div className="flex items-center justify-between">
@@ -103,8 +111,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                             <div
                                 onClick={() => handleTierSelect('Pro')}
                                 className={`p-4 rounded-lg border cursor-pointer transition-all ${selectedTier === 'Pro'
-                                        ? 'bg-amber-950/30 border-amber-500'
-                                        : 'bg-zinc-950 border-zinc-800 hover:border-zinc-700'
+                                    ? 'bg-amber-950/30 border-amber-500'
+                                    : 'bg-zinc-950 border-zinc-800 hover:border-zinc-700'
                                     }`}
                             >
                                 <div className="flex items-center justify-between">

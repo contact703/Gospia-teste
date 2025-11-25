@@ -3,12 +3,13 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
 import { ClientLayout } from "@/components/ClientLayout";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "GospIA - Conselheiro Virtual",
-  description: "Seu conselheiro pastoral virtual.",
+  title: "GospIA - Ouvir você é minha missão",
+  description: "Seu conselheiro pastoral virtual",
 };
 
 export default function RootLayout({
@@ -17,11 +18,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="dark">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
-        <UserProvider>
-          <ClientLayout>{children}</ClientLayout>
-        </UserProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <UserProvider>
+            <ClientLayout>{children}</ClientLayout>
+          </UserProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -9,12 +9,13 @@ interface TextToSpeechHook {
 
 export const useTextToSpeech = (): TextToSpeechHook => {
     const [isSpeaking, setIsSpeaking] = useState(false);
-    const [synthesis, setSynthesis] = useState<SpeechSynthesis | null>(null);
+    const [hasSynthesisSupport, setHasSynthesisSupport] = useState(false);
     const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
 
     useEffect(() => {
         if (typeof window !== 'undefined' && window.speechSynthesis) {
-            setSynthesis(window.speechSynthesis);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setHasSynthesisSupport(true);
 
             const loadVoices = () => {
                 const voices = window.speechSynthesis.getVoices();
@@ -30,7 +31,8 @@ export const useTextToSpeech = (): TextToSpeechHook => {
     }, []);
 
     const speak = useCallback((text: string) => {
-        if (synthesis) {
+        if (typeof window !== 'undefined' && window.speechSynthesis) {
+            const synthesis = window.speechSynthesis;
             // Cancel any current speaking
             synthesis.cancel();
 
@@ -48,19 +50,19 @@ export const useTextToSpeech = (): TextToSpeechHook => {
 
             synthesis.speak(utterance);
         }
-    }, [synthesis, voice]);
+    }, [voice]);
 
     const cancel = useCallback(() => {
-        if (synthesis) {
-            synthesis.cancel();
+        if (typeof window !== 'undefined' && window.speechSynthesis) {
+            window.speechSynthesis.cancel();
             setIsSpeaking(false);
         }
-    }, [synthesis]);
+    }, []);
 
     return {
         speak,
         cancel,
         isSpeaking,
-        hasSynthesisSupport: !!synthesis
+        hasSynthesisSupport
     };
 };

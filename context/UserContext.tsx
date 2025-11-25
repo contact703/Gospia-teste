@@ -31,9 +31,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const storedTier = localStorage.getItem('gospia_tier') as PastorTier;
 
         if (storedUser) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setUser(JSON.parse(storedUser));
         }
         if (storedTier) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setTier(storedTier);
         }
     }, []);

@@ -1,9 +1,6 @@
 import { Pastor } from './personas';
 
-interface ChatMessage {
-    role: 'user' | 'assistant';
-    content: string;
-}
+
 
 const SAFETY_KEYWORDS = ['suicídio', 'suicidio', 'se matar', 'me matar', 'morte', 'morrer', 'cortar', 'abuso', 'violência', 'violencia'];
 
@@ -35,7 +32,7 @@ export async function generateMockResponse(userMessage: string, pastor: Pastor):
     let intro = `A paz do Senhor. Sou o ${pastor.name}.`;
     let body = "Entendo o que você está passando. A Bíblia nos ensina a confiar no Senhor em todos os momentos.";
     let scripture = "> \"Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.\" (Provérbios 3:5)";
-    let prayer = "Vamos orar: Senhor, abençoe esta vida, traga paz e direção. Em nome de Jesus, Amém.";
+    const prayer = "Vamos orar: Senhor, abençoe esta vida, traga paz e direção. Em nome de Jesus, Amém.";
 
     if (pastor.id === 'eduardo') {
         intro = "Graça e paz. Vamos olhar para as Escrituras com profundidade.";

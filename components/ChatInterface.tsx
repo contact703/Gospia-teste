@@ -2,13 +2,14 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Mic, Volume2, Lock } from 'lucide-react';
+import { Send, Mic, Volume2, Lock, ChevronDown, Crown } from 'lucide-react';
 import { useUser } from '@/context/UserContext';
 import { generateMockResponse } from '@/lib/chatLogic';
 import { AuthModal } from './AuthModal';
 import { cn } from '@/lib/utils';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
+import { PASTORS } from '@/lib/personas';
 
 interface Message {
     id: string;
@@ -17,7 +18,7 @@ interface Message {
 }
 
 export const ChatInterface = () => {
-    const { user, selectedPastor } = useUser();
+    const { user, selectedPastor, switchPastor, tier } = useUser();
     const [messages, setMessages] = useState<Message[]>([
         {
             id: 'welcome',
@@ -28,6 +29,7 @@ export const ChatInterface = () => {
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [isPastorDropdownOpen, setIsPastorDropdownOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const { isListening, transcript, startListening, stopListening, resetTranscript, hasRecognitionSupport } = useSpeechRecognition();
@@ -122,8 +124,70 @@ export const ChatInterface = () => {
         }
     };
 
+    const handlePastorSelect = (pastorId: string) => {
+        const success = switchPastor(pastorId);
+        if (!success) {
+            // If blocked, maybe show a toast or alert. 
+            // Since switchPastor returns false, we know it failed.
+            alert("Upgrade para o GospIA Pro para desbloquear este pastor!");
+        }
+        setIsPastorDropdownOpen(false);
+    };
+
     return (
-        <div className="flex flex-col h-full max-w-4xl mx-auto w-full">
+        <div className="flex flex-col h-full max-w-4xl mx-auto w-full relative">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-zinc-800 bg-black/50 backdrop-blur-md z-20">
+                <div className="relative">
+                    <button
+                        onClick={() => setIsPastorDropdownOpen(!isPastorDropdownOpen)}
+                        className="flex items-center gap-2 text-lg font-semibold text-white hover:text-zinc-300 transition-colors"
+                    >
+                        {selectedPastor.name}
+                        <ChevronDown size={16} className={`transition-transform ${isPastorDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    <AnimatePresence>
+                        {isPastorDropdownOpen && (
+                            <>
+                                <div
+                                    className="fixed inset-0 z-10"
+                                    onClick={() => setIsPastorDropdownOpen(false)}
+                                />
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl overflow-hidden z-20"
+                                >
+                                    {PASTORS.map((pastor) => {
+                                        const isLocked = pastor.tier === 'Pro' && tier === 'Free';
+                                        return (
+                                            <button
+                                                key={pastor.id}
+                                                onClick={() => handlePastorSelect(pastor.id)}
+                                                className={cn(
+                                                    "w-full flex items-center justify-between px-4 py-3 text-sm transition-colors border-b border-zinc-800/50 last:border-0",
+                                                    selectedPastor.id === pastor.id
+                                                        ? "bg-zinc-800 text-white"
+                                                        : "text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
+                                                )}
+                                            >
+                                                <span className="flex items-center gap-2">
+                                                    {pastor.name}
+                                                    {pastor.tier === 'Pro' && !isLocked && <Crown size={12} className="text-amber-500" />}
+                                                </span>
+                                                {isLocked && <Lock size={14} className="text-zinc-600" />}
+                                            </button>
+                                        );
+                                    })}
+                                </motion.div>
+                            </>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-6">
                 {messages.map((msg) => (
