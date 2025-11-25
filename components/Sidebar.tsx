@@ -139,8 +139,18 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
                         <div className="px-4 py-3 mb-2 bg-zinc-50 dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800">
                             <div className="text-sm font-medium truncate text-zinc-900 dark:text-white">{user.name}</div>
                             <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</div>
-                            <div className="mt-2 text-xs font-semibold text-amber-600 dark:text-amber-500 border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-2 py-1 rounded w-fit">
-                                {tier} Plan
+                            <div className="flex items-center justify-between mt-2">
+                                <div className="text-xs font-semibold text-amber-600 dark:text-amber-500 border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-2 py-1 rounded w-fit">
+                                    {tier} Plan
+                                </div>
+                                {tier === 'Free' && (
+                                    <Link
+                                        href="/pricing"
+                                        className="text-xs font-medium text-zinc-900 dark:text-white underline hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
+                                    >
+                                        Ver Planos
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     ) : (

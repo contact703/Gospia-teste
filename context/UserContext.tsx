@@ -54,6 +54,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setSelectedPastor(PASTORS[0]);
         localStorage.removeItem('gospia_user');
         localStorage.removeItem('gospia_tier');
+        // Force a reload to ensure clean state if needed, or just rely on state update
+        // window.location.href = '/'; 
     };
 
     const upgrade = () => {
