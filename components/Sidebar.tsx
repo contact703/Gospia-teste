@@ -2,18 +2,18 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquarePlus, User, Music, LogOut, Menu, X, Crown, MessageCircle, Lock } from 'lucide-react';
+import { MessageSquarePlus, Music, LogOut, Menu, X, Crown, MessageCircle, Lock, MoreHorizontal, Sun, Moon, CreditCard } from 'lucide-react';
 import { useUser } from '@/context/UserContext';
 import { PASTORS } from '@/lib/personas';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { ThemeToggle } from './ThemeToggle';
-import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => void }) => {
-    const { user, tier, selectedPastor, switchPastor } = useUser();
+    const { user, tier, selectedPastor, switchPastor, logout } = useUser();
     const [isOpen, setIsOpen] = useState(false);
-    const router = useRouter();
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const { theme, setTheme } = useTheme();
 
     const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -23,10 +23,6 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
             alert("Upgrade para o GospIA Pro para desbloquear este pastor!");
         }
         setIsOpen(false);
-    };
-
-    const handleProfileClick = () => {
-        router.push('/profile');
     };
 
     return (
@@ -133,25 +129,90 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
                     </button>
                 </nav>
 
-                {/* Bottom Section */}
-                <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 space-y-2">
+                {/* Bottom Section - User Profile Dropdown */}
+                <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 relative">
                     {user ? (
-                        <div className="px-4 py-3 mb-2 bg-zinc-50 dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800">
-                            <div className="text-sm font-medium truncate text-zinc-900 dark:text-white">{user.name}</div>
-                            <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</div>
-                            <div className="flex items-center justify-between mt-2">
-                                <div className="text-xs font-semibold text-amber-600 dark:text-amber-500 border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-2 py-1 rounded w-fit">
-                                    {tier} Plan
-                                </div>
-                                {tier === 'Free' && (
-                                    <Link
-                                        href="/pricing"
-                                        className="text-xs font-medium text-zinc-900 dark:text-white underline hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
-                                    >
-                                        Ver Planos
-                                    </Link>
+                        <div className="relative">
+                            <AnimatePresence>
+                                {isProfileOpen && (
+                                    <>
+                                        <div
+                                            className="fixed inset-0 z-10"
+                                            onClick={() => setIsProfileOpen(false)}
+                                        />
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            transition={{ duration: 0.1 }}
+                                            className="absolute bottom-full left-0 w-full mb-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl overflow-hidden z-20"
+                                        >
+                                            <div className="p-3 border-b border-zinc-200 dark:border-zinc-800">
+                                                <div className="text-sm font-medium text-zinc-900 dark:text-white truncate">{user.name}</div>
+                                                <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</div>
+                                                <div className="mt-2 flex items-center gap-2">
+                                                    <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${tier === 'Pro'
+                                                        ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-500 border-amber-200 dark:border-amber-500/30'
+                                                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700'
+                                                        }`}>
+                                                        {tier}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="p-1">
+                                                <button
+                                                    onClick={() => {
+                                                        setTheme(theme === 'dark' ? 'light' : 'dark');
+                                                    }}
+                                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                                                >
+                                                    {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                                                    Personalização
+                                                </button>
+
+                                                <Link
+                                                    href="/pricing"
+                                                    onClick={() => setIsProfileOpen(false)}
+                                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                                                >
+                                                    {tier === 'Free' ? <Crown size={16} className="text-amber-500" /> : <CreditCard size={16} />}
+                                                    {tier === 'Free' ? 'Assinar Pro' : 'Gerenciar Assinatura'}
+                                                </Link>
+
+                                                <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-1" />
+
+                                                <button
+                                                    onClick={() => {
+                                                        logout();
+                                                        setIsProfileOpen(false);
+                                                    }}
+                                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors"
+                                                >
+                                                    <LogOut size={16} />
+                                                    Sair
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                    </>
                                 )}
-                            </div>
+                            </AnimatePresence>
+
+                            <button
+                                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors group"
+                            >
+                                <div className="w-9 h-9 rounded-lg bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 font-medium group-hover:bg-zinc-300 dark:group-hover:bg-zinc-700 transition-colors">
+                                    {user.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div className="flex-1 text-left overflow-hidden">
+                                    <div className="text-sm font-medium text-zinc-900 dark:text-white truncate">{user.name}</div>
+                                    <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
+                                        {tier === 'Pro' ? 'Pro Plan' : 'Free Plan'}
+                                    </div>
+                                </div>
+                                <MoreHorizontal size={16} className="text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300" />
+                            </button>
                         </div>
                     ) : (
                         <Link href="/login" className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">
@@ -159,16 +220,6 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
                             Entrar / Cadastrar
                         </Link>
                     )}
-
-                    <button
-                        onClick={handleProfileClick}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-                    >
-                        <User size={20} />
-                        Perfil
-                    </button>
-
-                    <ThemeToggle />
                 </div>
             </div>
         </>
