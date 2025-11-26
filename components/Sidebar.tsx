@@ -60,7 +60,7 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
                 {/* Header */}
                 <div className="p-6 border-b border-white/10 dark:border-zinc-800 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC53rLlFPWCqGqZxy_1fxovxEJbbThbyKuS74c2oub32WFekSr4KwojiOaermwhJ_jiXb_PgBmOsNUGWDq6hUGFXI5K78Ed3yjdXOvHzZplvi8ADvCF4NctDXZFzQ3XfHc-jqjc_9-44zJOIGpuwf1GpqRPVpDw-CCMTrNXicpirC2rTUP2UhvVusCWZ5rJXmES71KBbyCRqzwIf_DRt4WCqNVmR8d52QMheu9w0y3QU_6e-34Y0Mk4N8grg4GLKyVcSewBJPogaARv" alt="GospIA Logo" className="h-8 w-auto" />
+                        <img src="/gospia-logo.png" alt="GospIA Logo" className="h-8 w-auto" />
                     </div>
                     {tier === 'Pro' && (
                         <span className="px-2 py-0.5 text-xs font-semibold bg-dourado-sol/20 text-dourado-sol dark:text-amber-500 rounded-full border border-dourado-sol/30 flex items-center gap-1">
