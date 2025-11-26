@@ -22,9 +22,9 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <div className="flex h-screen w-full bg-white dark:bg-neutral-950 overflow-hidden">
+        <div className="flex h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 overflow-hidden w-full flex-col md:flex-row transition-colors duration-300">
             <Sidebar onOpenSongGenerator={handleOpenSongGen} />
-            <main className="flex-1 h-full overflow-y-auto relative flex flex-col">
+            <main className="flex-1 relative overflow-hidden flex flex-col w-full h-full">
                 {children}
             </main>
             <SongGenerator isOpen={isSongGenOpen} onClose={() => setIsSongGenOpen(false)} />
