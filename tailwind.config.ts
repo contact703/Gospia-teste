@@ -15,13 +15,20 @@ const config: Config = {
                     "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
             },
             colors: {
+                // Light Mode Colors
                 "cerulean": "#4793C3",
                 "misty-jade": "#A7BCB9",
                 "dourado-sol": "#D1A96D",
                 "grafite-profundo": "#363A3E",
                 "texto-branco": "#FFFFFF",
                 "texto-cinza-claro": "#A0AEC0",
-                "borda-clara": "#E2E8F0"
+                "borda-clara": "#E2E8F0",
+
+                // Dark Mode Colors (Mapped)
+                "dark-grafite-profundo": "#4A4B4C",
+                "dark-grafite-mais-escuro": "#212121",
+                "dark-dourado-sol": "#D1A355",
+                "dark-borda-escura": "#3f3f46",
             },
             fontFamily: {
                 display: ["Inter", "sans-serif"],

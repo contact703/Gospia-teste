@@ -18,7 +18,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <div className="flex h-screen w-full bg-misty-jade text-grafite-profundo font-display">
+        <div className="flex h-screen w-full bg-misty-jade dark:bg-dark-grafite-mais-escuro text-grafite-profundo dark:text-texto-branco font-display transition-colors duration-200">
             <Sidebar onOpenSongGenerator={handleOpenSongGen} />
             <main className="flex-1 flex flex-col h-full overflow-hidden">
                 {children}

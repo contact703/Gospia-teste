@@ -5,7 +5,6 @@ import { useUser } from '@/context/UserContext';
 import { generateMockResponse } from '@/lib/chatLogic';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
-import { ChatHeader } from './ChatHeader';
 
 interface Message {
     id: string;
@@ -98,16 +97,25 @@ export const ChatInterface = () => {
         }
     };
 
+    // Mobile menu trigger helper
+    const openMobileMenu = () => {
+        const btn = document.getElementById('mobile-menu-trigger');
+        if (btn) btn.click();
+    };
+
     return (
         <div className="flex-1 flex flex-col h-full relative">
             {/* Header */}
-            <header className="flex items-center justify-between p-4 border-b border-b-transparent lg:border-none">
-                <button className="p-2 rounded-lg lg:hidden hover:bg-gray-100" id="menu-btn">
-                    <span className="material-symbols-outlined">menu</span>
+            <header className="flex items-center justify-between p-4 border-b border-b-transparent dark:border-dark-borda-escura lg:border-none">
+                <button
+                    onClick={openMobileMenu}
+                    className="p-2 rounded-lg lg:hidden hover:bg-gray-100 dark:hover:bg-dark-grafite-profundo"
+                >
+                    <span className="material-symbols-outlined dark:text-texto-branco">menu</span>
                 </button>
-                <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-                    <span className="text-lg font-semibold">{selectedPastor.name}</span>
-                    <span className="material-symbols-outlined">expand_more</span>
+                <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-grafite-profundo cursor-pointer">
+                    <span className="text-lg font-semibold dark:text-texto-branco">{selectedPastor.name}</span>
+                    <span className="material-symbols-outlined dark:text-texto-branco">expand_more</span>
                 </div>
                 <button className="p-2 rounded-lg lg:hidden opacity-0" disabled>
                     <span className="material-symbols-outlined">menu</span>
@@ -119,8 +127,8 @@ export const ChatInterface = () => {
                 <div className="w-full max-w-4xl mx-auto flex flex-col gap-4 justify-end min-h-full">
                     {messages.length === 0 ? (
                         <div className="flex">
-                            <div className="bg-cerulean rounded-lg p-4 max-w-2xl">
-                                <p className="font-bold text-sm uppercase tracking-wider text-white/80 mb-2">{selectedPastor.name}</p>
+                            <div className="bg-cerulean dark:bg-dark-grafite-profundo rounded-lg p-4 max-w-2xl">
+                                <p className="font-bold text-sm uppercase tracking-wider text-white/80 dark:text-texto-branco mb-2">{selectedPastor.name}</p>
                                 <p className="text-texto-branco">{selectedPastor.description}</p>
                             </div>
                         </div>
@@ -128,12 +136,12 @@ export const ChatInterface = () => {
                         messages.map((msg, index) => (
                             <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`rounded-lg p-4 max-w-2xl ${msg.role === 'user'
-                                    ? 'bg-white text-grafite-profundo border border-borda-clara'
-                                    : 'bg-cerulean text-texto-branco'
+                                    ? 'bg-white dark:bg-dark-grafite-profundo text-grafite-profundo dark:text-texto-branco border border-borda-clara dark:border-none'
+                                    : 'bg-cerulean dark:bg-dark-grafite-profundo text-texto-branco'
                                     }`}>
                                     {msg.role === 'assistant' && (
                                         <div className="flex items-center justify-between mb-2">
-                                            <p className="font-bold text-sm uppercase tracking-wider text-white/80">{selectedPastor.name}</p>
+                                            <p className="font-bold text-sm uppercase tracking-wider text-white/80 dark:text-texto-branco">{selectedPastor.name}</p>
                                             <button
                                                 onClick={() => toggleSpeech(msg.content)}
                                                 className="p-1 hover:bg-white/10 rounded-full transition-colors"
@@ -151,8 +159,8 @@ export const ChatInterface = () => {
                     )}
                     {isLoading && (
                         <div className="flex justify-start">
-                            <div className="bg-cerulean rounded-lg p-4 max-w-2xl">
-                                <p className="font-bold text-sm uppercase tracking-wider text-white/80 mb-2">{selectedPastor.name}</p>
+                            <div className="bg-cerulean dark:bg-dark-grafite-profundo rounded-lg p-4 max-w-2xl">
+                                <p className="font-bold text-sm uppercase tracking-wider text-white/80 dark:text-texto-branco mb-2">{selectedPastor.name}</p>
                                 <div className="flex gap-2">
                                     <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
                                     <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
@@ -170,12 +178,12 @@ export const ChatInterface = () => {
                 <div className="w-full max-w-4xl mx-auto">
                     {/* Locked Overlay for Free Tier accessing Pro Pastors */}
                     {tier === 'Free' && selectedPastor.tier === 'Pro' ? (
-                        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
-                            <div className="bg-white p-6 rounded-xl shadow-xl text-center max-w-md mx-4">
-                                <span className="material-symbols-outlined text-4xl text-dourado-sol mb-2">lock</span>
-                                <h3 className="text-xl font-bold text-grafite-profundo mb-2">Pastor Exclusivo Pro</h3>
-                                <p className="text-texto-cinza-claro mb-4">Faça upgrade para conversar com {selectedPastor.name} e desbloquear todos os pastores.</p>
-                                <a href="/pricing" className="inline-flex items-center justify-center px-6 py-3 bg-dourado-sol text-white font-semibold rounded-lg hover:bg-dourado-sol/90 transition-colors">
+                        <div className="absolute inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
+                            <div className="bg-white dark:bg-dark-grafite-profundo p-6 rounded-xl shadow-xl text-center max-w-md mx-4">
+                                <span className="material-symbols-outlined text-4xl text-dourado-sol dark:text-dark-dourado-sol mb-2">lock</span>
+                                <h3 className="text-xl font-bold text-grafite-profundo dark:text-texto-branco mb-2">Pastor Exclusivo Pro</h3>
+                                <p className="text-texto-cinza-claro dark:text-texto-branco mb-4">Faça upgrade para conversar com {selectedPastor.name} e desbloquear todos os pastores.</p>
+                                <a href="/pricing" className="inline-flex items-center justify-center px-6 py-3 bg-dourado-sol dark:bg-dark-dourado-sol text-white font-semibold rounded-lg hover:bg-dourado-sol/90 transition-colors">
                                     Assinar Pro
                                 </a>
                             </div>
@@ -185,7 +193,7 @@ export const ChatInterface = () => {
                     <div className="relative">
                         <button
                             onClick={toggleListening}
-                            className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${isListening ? 'text-red-500 animate-pulse' : 'text-texto-cinza-claro hover:text-cerulean'}`}
+                            className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${isListening ? 'text-red-500 animate-pulse' : 'text-texto-cinza-claro dark:text-texto-branco hover:text-cerulean'}`}
                         >
                             <span className="material-symbols-outlined">mic</span>
                         </button>
@@ -196,24 +204,24 @@ export const ChatInterface = () => {
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
                             placeholder={isListening ? "Ouvindo..." : "Digite sua mensagem..."}
-                            className="w-full bg-white border-borda-clara rounded-full py-4 pl-12 pr-28 focus:ring-2 focus:ring-dourado-sol text-grafite-profundo placeholder:text-texto-cinza-claro shadow-sm outline-none transition-all"
+                            className="w-full bg-white dark:bg-dark-grafite-profundo border-borda-clara dark:border-none rounded-full py-4 pl-12 pr-28 focus:ring-2 focus:ring-dourado-sol dark:focus:ring-dark-dourado-sol text-grafite-profundo dark:text-texto-branco placeholder:text-texto-cinza-claro dark:placeholder:text-texto-branco shadow-sm outline-none transition-all"
                             disabled={isLoading || (tier === 'Free' && selectedPastor.tier === 'Pro')}
                         />
 
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                            <button className="p-2 rounded-full hover:bg-gray-100 text-texto-cinza-claro transition-colors">
+                            <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-700 text-texto-cinza-claro dark:text-texto-branco transition-colors">
                                 <span className="material-symbols-outlined">volume_up</span>
                             </button>
                             <button
                                 onClick={handleSend}
                                 disabled={!input.trim() || isLoading}
-                                className="w-10 h-10 flex items-center justify-center rounded-full bg-cerulean text-texto-branco hover:bg-dourado-sol transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-10 h-10 flex items-center justify-center rounded-full bg-cerulean dark:bg-dark-dourado-sol text-texto-branco hover:bg-dourado-sol dark:hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <span className="material-symbols-outlined">send</span>
                             </button>
                         </div>
                     </div>
-                    <p className="text-xs text-center mt-3 text-texto-cinza-claro">GospIA pode cometer erros. Considere verificar informações importantes.</p>
+                    <p className="text-xs text-center mt-3 text-texto-cinza-claro dark:text-texto-branco">GospIA pode cometer erros. Considere verificar informações importantes.</p>
                 </div>
             </footer>
         </div>
