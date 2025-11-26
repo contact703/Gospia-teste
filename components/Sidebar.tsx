@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquarePlus, Music, LogOut, Menu, X, Crown, MessageCircle, Lock, MoreHorizontal, Sun, Moon, CreditCard } from 'lucide-react';
+import { MessageSquarePlus, Music, LogOut, Menu, X, Crown, MessageCircle, Lock, MoreHorizontal, Sun, Moon, CreditCard, ChevronDown } from 'lucide-react';
 import { useUser } from '@/context/UserContext';
 import { PASTORS } from '@/lib/personas';
 import Link from 'next/link';
@@ -13,6 +13,7 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
     const { user, tier, selectedPastor, switchPastor, logout } = useUser();
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isPastorsOpen, setIsPastorsOpen] = useState(true);
     const { theme, setTheme } = useTheme();
 
     const toggleSidebar = () => setIsOpen(!isOpen);
@@ -89,34 +90,53 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
                     </button>
 
                     <div className="pt-4 pb-2">
-                        <h3 className="px-4 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
-                            Pastores
-                        </h3>
-                        <div className="space-y-1">
-                            {PASTORS.map((pastor) => {
-                                const isLocked = pastor.tier === 'Pro' && tier === 'Free';
-                                const isSelected = selectedPastor.id === pastor.id;
+                        <button
+                            onClick={() => setIsPastorsOpen(!isPastorsOpen)}
+                            className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+                        >
+                            PASTORES
+                            <ChevronDown
+                                size={14}
+                                className={cn("transition-transform duration-200", isPastorsOpen ? "rotate-180" : "")}
+                            />
+                        </button>
+                        <AnimatePresence>
+                            {isPastorsOpen && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="overflow-hidden"
+                                >
+                                    <div className="space-y-1 mt-1">
+                                        {PASTORS.map((pastor) => {
+                                            const isLocked = pastor.tier === 'Pro' && tier === 'Free';
+                                            const isSelected = selectedPastor.id === pastor.id;
 
-                                return (
-                                    <button
-                                        key={pastor.id}
-                                        onClick={() => handlePastorClick(pastor.id)}
-                                        className={cn(
-                                            "w-full flex items-center gap-3 px-4 py-2 text-sm font-medium transition-colors relative rounded-lg",
-                                            isSelected
-                                                ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white"
-                                                : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                                        )}
-                                    >
-                                        <div className="flex-1 text-left truncate">
-                                            {pastor.name}
-                                        </div>
-                                        {isLocked && <Lock size={14} className="text-zinc-400 dark:text-zinc-600" />}
-                                        {pastor.tier === 'Pro' && !isLocked && <Crown size={14} className="text-amber-500" />}
-                                    </button>
-                                );
-                            })}
-                        </div>
+                                            return (
+                                                <button
+                                                    key={pastor.id}
+                                                    onClick={() => handlePastorClick(pastor.id)}
+                                                    className={cn(
+                                                        "w-full flex items-center gap-3 px-4 py-2 text-sm font-medium transition-colors relative rounded-lg",
+                                                        isSelected
+                                                            ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white"
+                                                            : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                                                    )}
+                                                >
+                                                    <div className="flex-1 text-left truncate">
+                                                        {pastor.name}
+                                                    </div>
+                                                    {isLocked && <Lock size={14} className="text-zinc-400 dark:text-zinc-600" />}
+                                                    {pastor.tier === 'Pro' && !isLocked && <Crown size={14} className="text-amber-500" />}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
 
                     <button
@@ -161,15 +181,17 @@ export const Sidebar = ({ onOpenSongGenerator }: { onOpenSongGenerator: () => vo
                                             </div>
 
                                             <div className="p-1">
-                                                <button
-                                                    onClick={() => {
-                                                        setTheme(theme === 'dark' ? 'light' : 'dark');
-                                                    }}
-                                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-                                                >
-                                                    {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-                                                    Personalização
-                                                </button>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            setTheme(theme === 'dark' ? 'light' : 'dark');
+                                                        }}
+                                                        title={theme === 'dark' ? 'Tema Claro' : 'Tema Escuro'}
+                                                        className="flex items-center justify-center p-2 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                                                    >
+                                                        {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                                                    </button>
+                                                </div>
 
                                                 <Link
                                                     href="/pricing"
