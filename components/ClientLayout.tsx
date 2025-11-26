@@ -11,10 +11,6 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
 
     const handleOpenSongGen = () => {
         if (tier === 'Free') {
-            // In a real app, we might redirect to a pricing page or show a modal.
-            // For now, we'll just alert or maybe show a "Upgrade" modal.
-            // The requirement says: "Free User: Redirects immediately to the GospIA Pro Payment/Subscription Page."
-            // I'll simulate a redirect or show an alert for now.
             alert("Upgrade para o GospIA Pro para acessar esta funcionalidade!");
             return;
         }
@@ -22,9 +18,9 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <div className="flex h-screen w-full bg-misty-jade dark:bg-black overflow-hidden">
+        <div className="flex h-screen w-full bg-misty-jade text-grafite-profundo font-display">
             <Sidebar onOpenSongGenerator={handleOpenSongGen} />
-            <main className="flex-1 h-full overflow-y-auto relative flex flex-col">
+            <main className="flex-1 flex flex-col h-full overflow-hidden">
                 {children}
             </main>
             <SongGenerator isOpen={isSongGenOpen} onClose={() => setIsSongGenOpen(false)} />

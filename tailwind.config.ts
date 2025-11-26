@@ -23,6 +23,9 @@ const config: Config = {
                 "texto-cinza-claro": "#A0AEC0",
                 "borda-clara": "#E2E8F0"
             },
+            fontFamily: {
+                display: ["Inter", "sans-serif"],
+            },
         },
     },
     plugins: [],
