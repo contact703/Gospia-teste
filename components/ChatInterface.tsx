@@ -143,12 +143,12 @@ export const ChatInterface = () => {
                             className={cn(
                                 "max-w-[80%] rounded-2xl p-4 text-sm md:text-base leading-relaxed whitespace-pre-wrap shadow-sm",
                                 msg.role === 'user'
-                                    ? "bg-zinc-900 dark:bg-zinc-800 text-white rounded-br-none"
-                                    : "bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-bl-none"
+                                    ? "bg-white dark:bg-zinc-800 text-grafite-profundo dark:text-white rounded-br-none"
+                                    : "bg-cerulean dark:bg-zinc-900/50 border border-transparent dark:border-zinc-800 text-white dark:text-zinc-100 rounded-bl-none"
                             )}
                         >
                             {msg.role === 'assistant' && (
-                                <div className="text-xs font-semibold text-zinc-500 mb-2 uppercase tracking-wider">
+                                <div className="text-xs font-semibold text-white/80 dark:text-zinc-500 mb-2 uppercase tracking-wider">
                                     {selectedPastor.name}
                                 </div>
                             )}
@@ -163,10 +163,10 @@ export const ChatInterface = () => {
                         animate={{ opacity: 1 }}
                         className="flex justify-start w-full"
                     >
-                        <div className="bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl rounded-bl-none p-4 flex items-center gap-2 text-zinc-500 dark:text-zinc-400 text-sm shadow-sm">
-                            <div className="w-2 h-2 bg-zinc-400 dark:bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                            <div className="w-2 h-2 bg-zinc-400 dark:bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                            <div className="w-2 h-2 bg-zinc-400 dark:bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <div className="bg-cerulean dark:bg-zinc-900/50 border border-transparent dark:border-zinc-800 rounded-2xl rounded-bl-none p-4 flex items-center gap-2 text-white/80 dark:text-zinc-400 text-sm shadow-sm">
+                            <div className="w-2 h-2 bg-white dark:bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                            <div className="w-2 h-2 bg-white dark:bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                            <div className="w-2 h-2 bg-white dark:bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                             <span className="ml-2">GospIA está buscando uma palavra...</span>
                         </div>
                     </motion.div>
@@ -175,66 +175,62 @@ export const ChatInterface = () => {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-black/50 backdrop-blur-md transition-colors duration-300">
-                <div className="relative flex items-center gap-2 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-2 focus-within:border-zinc-400 dark:focus-within:border-zinc-600 transition-colors">
+            <div className="p-4 md:p-6 lg:p-8 pt-0 bg-transparent">
+                <div className="w-full max-w-4xl mx-auto">
+                    <div className="relative">
+                        <Mic
+                            size={20}
+                            className={cn(
+                                "absolute left-4 top-1/2 -translate-y-1/2 transition-colors cursor-pointer z-20",
+                                isListening ? "text-red-500 animate-pulse" : "text-texto-cinza-claro hover:text-dourado-sol"
+                            )}
+                            onClick={handleMicClick}
+                        />
 
-                    {/* Locked Overlay if not auth */}
-                    {!user && (
-                        <div
-                            className="absolute inset-0 bg-white/60 dark:bg-black/60 z-10 flex items-center justify-center rounded-xl cursor-pointer backdrop-blur-[1px]"
-                            onClick={() => setIsAuthModalOpen(true)}
-                        >
-                            <div className="flex items-center gap-2 text-white font-medium bg-zinc-900 dark:bg-zinc-800 px-4 py-2 rounded-full shadow-lg hover:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors">
-                                <Lock size={16} />
-                                Entrar para conversar
+                        <input
+                            className="w-full bg-white dark:bg-zinc-900 border-borda-clara dark:border-zinc-800 rounded-full py-4 pl-12 pr-28 focus:ring-2 focus:ring-dourado-sol text-grafite-profundo dark:text-white placeholder:text-texto-cinza-claro shadow-sm"
+                            placeholder={user ? "Digite sua mensagem..." : "Faça login para começar..."}
+                            type="text"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            disabled={!user}
+                        />
+
+                        {/* Locked Overlay if not auth */}
+                        {!user && (
+                            <div
+                                className="absolute inset-0 bg-white/60 dark:bg-black/60 z-10 flex items-center justify-center rounded-full cursor-pointer backdrop-blur-[1px]"
+                                onClick={() => setIsAuthModalOpen(true)}
+                            >
+                                <div className="flex items-center gap-2 text-white font-medium bg-zinc-900 dark:bg-zinc-800 px-4 py-2 rounded-full shadow-lg hover:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors">
+                                    <Lock size={16} />
+                                    Entrar
+                                </div>
                             </div>
+                        )}
+
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                            <button
+                                onClick={handleSpeakerClick}
+                                className={cn(
+                                    "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors",
+                                    isSpeaking ? "text-green-500" : "text-texto-cinza-claro"
+                                )}
+                                disabled={!hasSynthesisSupport}
+                            >
+                                <Volume2 size={20} />
+                            </button>
+                            <button
+                                onClick={handleSendMessage}
+                                disabled={!inputValue.trim() || isLoading}
+                                className="w-10 h-10 flex items-center justify-center rounded-full bg-cerulean dark:bg-white text-texto-branco dark:text-black hover:bg-dourado-sol dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <Send size={18} />
+                            </button>
                         </div>
-                    )}
-
-                    <button
-                        onClick={handleMicClick}
-                        className={cn(
-                            "p-2 transition-colors rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800",
-                            isListening ? "text-red-500 animate-pulse" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-                        )}
-                        disabled={!hasRecognitionSupport}
-                        title={hasRecognitionSupport ? "Falar" : "Navegador não suporta reconhecimento de voz"}
-                    >
-                        <Mic size={20} />
-                    </button>
-
-                    <textarea
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder={user ? "Digite sua mensagem..." : "Faça login para começar..."}
-                        className="flex-1 bg-transparent text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none resize-none max-h-32 py-2"
-                        rows={1}
-                        disabled={!user}
-                    />
-
-                    <button
-                        onClick={handleSpeakerClick}
-                        className={cn(
-                            "p-2 transition-colors rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800",
-                            isSpeaking ? "text-green-500" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-                        )}
-                        disabled={!hasSynthesisSupport}
-                        title={hasSynthesisSupport ? "Ouvir última mensagem" : "Navegador não suporta síntese de voz"}
-                    >
-                        <Volume2 size={20} />
-                    </button>
-
-                    <button
-                        onClick={handleSendMessage}
-                        disabled={!inputValue.trim() || isLoading}
-                        className="p-2 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <Send size={20} />
-                    </button>
-                </div>
-                <div className="text-center mt-2 text-xs text-zinc-500 dark:text-zinc-600">
-                    GospIA pode cometer erros. Considere verificar informações importantes.
+                    </div>
+                    <p className="text-xs text-center mt-3 text-texto-cinza-claro">GospIA pode cometer erros. Considere verificar informações importantes.</p>
                 </div>
             </div>
 
