@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
+import { PASTORS } from '@/lib/personas';
+
 interface SidebarProps {
     onOpenSongGenerator: () => void;
 }
@@ -21,12 +23,6 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
     const toggleTheme = () => {
         setTheme(theme === 'dark' ? 'light' : 'dark');
     };
-
-    const pastors = [
-        { id: 'elder', name: 'Pastor Elder', tier: 'Free' },
-        { id: 'eduardo', name: 'Pastor Eduardo', tier: 'Pro' },
-        { id: 'mario', name: 'Pastor Mario', tier: 'Pro' }
-    ];
 
     const handlePastorClick = (pastorId: string) => {
         const success = switchPastor(pastorId);
@@ -53,7 +49,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                     {isMobileMenuOpen && (
                         <button
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="lg:hidden ml-auto p-2 rounded-full hover:bg-dourado-sol dark:hover:bg-zinc-700 text-white"
+                            className="lg:hidden ml-auto p-2 rounded-full hover:bg-white/10 text-white"
                         >
                             <span className="material-symbols-outlined">close</span>
                         </button>
@@ -65,7 +61,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                     <div className="flex flex-col">
                         <button
                             onClick={() => setIsChatPastoralOpen(!isChatPastoralOpen)}
-                            className="flex items-center justify-between gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol group w-full text-left transition-colors"
+                            className="flex items-center justify-between gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-white/10 group w-full text-left transition-colors"
                         >
                             <div className="flex items-center gap-3">
                                 <span className="material-symbols-outlined text-xl text-texto-branco">chat_bubble_outline</span>
@@ -84,7 +80,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                                 >
                                     <button
                                         onClick={() => window.location.reload()}
-                                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco text-sm w-full text-left transition-colors"
+                                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 text-texto-branco text-sm w-full text-left transition-colors"
                                     >
                                         <span className="material-symbols-outlined text-xl">add_comment</span>
                                         <span>Nova Conversa</span>
@@ -92,10 +88,10 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                                     <button className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-dourado-sol dark:bg-dark-dourado-sol text-texto-branco font-semibold text-sm w-full text-left transition-colors">
                                         <span>Conversa com Pastor E...</span>
                                     </button>
-                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco text-sm w-full text-left transition-colors">
+                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-white/10 text-texto-branco text-sm w-full text-left transition-colors">
                                         <span>Paz no coração</span>
                                     </button>
-                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco text-sm w-full text-left transition-colors">
+                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-white/10 text-texto-branco text-sm w-full text-left transition-colors">
                                         <span>Dúvidas sobre a fé</span>
                                     </button>
                                 </motion.div>
@@ -107,7 +103,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                     <div className="flex flex-col mt-2">
                         <button
                             onClick={() => setIsPastorsOpen(!isPastorsOpen)}
-                            className="flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol w-full text-left transition-colors"
+                            className="flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer hover:bg-white/10 w-full text-left transition-colors"
                         >
                             <div className="flex items-center gap-3">
                                 <span className="material-symbols-outlined text-xl text-texto-branco">groups</span>
@@ -124,7 +120,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                                     exit={{ height: 0, opacity: 0 }}
                                     className="flex flex-col gap-1 mt-2 pl-5 overflow-hidden"
                                 >
-                                    {pastors.map((pastor) => {
+                                    {PASTORS.map((pastor) => {
                                         const isSelected = selectedPastor.id === pastor.id;
                                         return (
                                             <button
@@ -132,7 +128,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                                                 onClick={() => handlePastorClick(pastor.id)}
                                                 className={cn(
                                                     "flex items-center justify-between px-4 py-2.5 rounded-lg text-texto-branco text-sm w-full text-left transition-colors",
-                                                    isSelected ? "bg-dourado-sol dark:bg-dark-dourado-sol font-semibold" : "hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol"
+                                                    isSelected ? "bg-dourado-sol dark:bg-dark-dourado-sol font-semibold" : "hover:bg-white/10"
                                                 )}
                                             >
                                                 <span>{pastor.name}</span>
@@ -149,7 +145,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
 
                     <button
                         onClick={onOpenSongGenerator}
-                        className="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco w-full text-left transition-colors"
+                        className="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg hover:bg-white/10 text-texto-branco w-full text-left transition-colors"
                     >
                         <span className="material-symbols-outlined text-xl text-texto-branco">music_note</span>
                         <span>Criar Louvor</span>
