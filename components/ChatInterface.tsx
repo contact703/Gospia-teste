@@ -104,27 +104,28 @@ export const ChatInterface = () => {
     };
 
     return (
-        <div className="flex-1 flex flex-col h-full relative">
+        <main className="flex-1 flex flex-col">
             {/* Header */}
             <header className="flex items-center justify-between p-4 border-b border-b-transparent dark:border-dark-borda-escura lg:border-none">
                 <button
                     onClick={openMobileMenu}
                     className="p-2 rounded-lg lg:hidden hover:bg-gray-100 dark:hover:bg-dark-grafite-profundo"
+                    id="menu-btn"
                 >
                     <span className="material-symbols-outlined dark:text-texto-branco">menu</span>
                 </button>
-                <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-grafite-profundo cursor-pointer">
+                <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-grafite-profundo cursor-pointer">
                     <span className="text-lg font-semibold dark:text-texto-branco">{selectedPastor.name}</span>
                     <span className="material-symbols-outlined dark:text-texto-branco">expand_more</span>
-                </div>
+                </button>
                 <button className="p-2 rounded-lg lg:hidden opacity-0" disabled>
                     <span className="material-symbols-outlined">menu</span>
                 </button>
             </header>
 
             {/* Messages Area */}
-            <div className="flex-1 flex flex-col p-4 md:p-6 lg:p-8 overflow-y-auto">
-                <div className="w-full max-w-4xl mx-auto flex flex-col gap-4 justify-end min-h-full">
+            <div className="flex-1 flex flex-col justify-end p-4 md:p-6 lg:p-8 overflow-y-auto">
+                <div className="w-full max-w-4xl mx-auto flex flex-col gap-4">
                     {messages.length === 0 ? (
                         <div className="flex">
                             <div className="bg-cerulean dark:bg-dark-grafite-profundo rounded-lg p-4 max-w-2xl">
@@ -224,6 +225,6 @@ export const ChatInterface = () => {
                     <p className="text-xs text-center mt-3 text-texto-cinza-claro dark:text-texto-branco">GospIA pode cometer erros. Considere verificar informações importantes.</p>
                 </div>
             </footer>
-        </div>
+        </main>
     );
 };

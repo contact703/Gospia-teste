@@ -49,7 +49,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                     {isMobileMenuOpen && (
                         <button
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="lg:hidden ml-auto p-2 rounded-full hover:bg-white/10 text-white"
+                            className="lg:hidden ml-auto p-2 rounded-full hover:bg-dourado-sol dark:hover:bg-zinc-700 text-white"
                         >
                             <span className="material-symbols-outlined">close</span>
                         </button>
@@ -59,16 +59,23 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                 <nav className="flex flex-col gap-2">
                     {/* Chat Pastoral Dropdown */}
                     <div className="flex flex-col">
-                        <button
-                            onClick={() => setIsChatPastoralOpen(!isChatPastoralOpen)}
-                            className="flex items-center justify-between gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-white/10 group w-full text-left transition-colors"
+                        <input
+                            type="checkbox"
+                            id="chat-pastoral-toggle"
+                            className="hidden dropdown-toggle"
+                            checked={isChatPastoralOpen}
+                            onChange={() => setIsChatPastoralOpen(!isChatPastoralOpen)}
+                        />
+                        <label
+                            htmlFor="chat-pastoral-toggle"
+                            className="flex items-center justify-between gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol group"
                         >
                             <div className="flex items-center gap-3">
                                 <span className="material-symbols-outlined text-xl text-texto-branco">chat_bubble_outline</span>
                                 <span className="font-medium text-texto-branco">Chat Pastoral</span>
                             </div>
-                            <span className={`material-symbols-outlined text-base text-texto-branco transition-transform ${isChatPastoralOpen ? 'rotate-180' : ''}`}>expand_more</span>
-                        </button>
+                            <span className={`material-symbols-outlined text-base text-texto-branco icon-expand transition-transform ${isChatPastoralOpen ? 'rotate-180' : ''}`}>expand_more</span>
+                        </label>
 
                         <AnimatePresence>
                             {isChatPastoralOpen && (
@@ -76,22 +83,22 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                                     initial={{ height: 0, opacity: 0 }}
                                     animate={{ height: "auto", opacity: 1 }}
                                     exit={{ height: 0, opacity: 0 }}
-                                    className="flex flex-col gap-1 mt-2 pl-5 overflow-hidden"
+                                    className="flex flex-col gap-1 mt-2 pl-5 overflow-hidden dropdown-content"
                                 >
                                     <button
                                         onClick={() => window.location.reload()}
-                                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-white/10 text-texto-branco text-sm w-full text-left transition-colors"
+                                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco text-sm w-full text-left"
                                     >
                                         <span className="material-symbols-outlined text-xl">add_comment</span>
                                         <span>Nova Conversa</span>
                                     </button>
-                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-dourado-sol dark:bg-dark-dourado-sol text-texto-branco font-semibold text-sm w-full text-left transition-colors">
+                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-dourado-sol dark:bg-dark-dourado-sol text-texto-branco font-semibold text-sm w-full text-left">
                                         <span>Conversa com Pastor E...</span>
                                     </button>
-                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-white/10 text-texto-branco text-sm w-full text-left transition-colors">
+                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco text-sm w-full text-left">
                                         <span>Paz no coração</span>
                                     </button>
-                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-white/10 text-texto-branco text-sm w-full text-left transition-colors">
+                                    <button className="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco text-sm w-full text-left">
                                         <span>Dúvidas sobre a fé</span>
                                     </button>
                                 </motion.div>
@@ -101,16 +108,23 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
 
                     {/* Pastores Dropdown */}
                     <div className="flex flex-col mt-2">
-                        <button
-                            onClick={() => setIsPastorsOpen(!isPastorsOpen)}
-                            className="flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer hover:bg-white/10 w-full text-left transition-colors"
+                        <input
+                            type="checkbox"
+                            id="pastores-toggle"
+                            className="hidden dropdown-toggle"
+                            checked={isPastorsOpen}
+                            onChange={() => setIsPastorsOpen(!isPastorsOpen)}
+                        />
+                        <label
+                            htmlFor="pastores-toggle"
+                            className="flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol"
                         >
                             <div className="flex items-center gap-3">
                                 <span className="material-symbols-outlined text-xl text-texto-branco">groups</span>
                                 <span className="font-medium text-texto-branco">Pastores</span>
                             </div>
-                            <span className={`material-symbols-outlined text-base text-texto-branco transition-transform ${isPastorsOpen ? 'rotate-180' : ''}`}>expand_more</span>
-                        </button>
+                            <span className={`material-symbols-outlined text-base text-texto-branco icon-expand transition-transform ${isPastorsOpen ? 'rotate-180' : ''}`}>expand_more</span>
+                        </label>
 
                         <AnimatePresence>
                             {isPastorsOpen && (
@@ -118,7 +132,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                                     initial={{ height: 0, opacity: 0 }}
                                     animate={{ height: "auto", opacity: 1 }}
                                     exit={{ height: 0, opacity: 0 }}
-                                    className="flex flex-col gap-1 mt-2 pl-5 overflow-hidden"
+                                    className="flex flex-col gap-1 mt-2 pl-5 overflow-hidden dropdown-content"
                                 >
                                     {PASTORS.map((pastor) => {
                                         const isSelected = selectedPastor.id === pastor.id;
@@ -127,8 +141,8 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                                                 key={pastor.id}
                                                 onClick={() => handlePastorClick(pastor.id)}
                                                 className={cn(
-                                                    "flex items-center justify-between px-4 py-2.5 rounded-lg text-texto-branco text-sm w-full text-left transition-colors",
-                                                    isSelected ? "bg-dourado-sol dark:bg-dark-dourado-sol font-semibold" : "hover:bg-white/10"
+                                                    "flex items-center justify-between px-4 py-2.5 rounded-lg text-texto-branco text-sm w-full text-left",
+                                                    isSelected ? "bg-dourado-sol dark:bg-dark-dourado-sol font-semibold" : "hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol"
                                                 )}
                                             >
                                                 <span>{pastor.name}</span>
@@ -145,7 +159,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
 
                     <button
                         onClick={onOpenSongGenerator}
-                        className="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg hover:bg-white/10 text-texto-branco w-full text-left transition-colors"
+                        className="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco w-full text-left"
                     >
                         <span className="material-symbols-outlined text-xl text-texto-branco">music_note</span>
                         <span>Criar Louvor</span>
@@ -164,24 +178,25 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
                             <p className="text-sm text-white/80 dark:text-texto-branco">{tier} Plan</p>
                         </div>
                     </div>
-                    <button className="text-texto-branco hover:text-dourado-sol dark:hover:text-dark-dourado-sol transition-colors">
+                    <button className="text-texto-branco hover:text-dourado-sol dark:hover:text-dark-dourado-sol">
                         <span className="material-symbols-outlined">more_horiz</span>
                     </button>
                 </div>
 
-                <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco transition-colors">
+                <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco">
                     <span className="material-symbols-outlined text-xl text-texto-branco">palette</span>
                     <span>Personalização</span>
                 </a>
 
-                <a href="/pricing" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco transition-colors">
+                <a href="/pricing" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco">
                     <span className="material-symbols-outlined text-xl text-dourado-sol dark:text-dark-dourado-sol">workspace_premium</span>
                     <span>Assinar Pro</span>
                 </a>
 
                 <button
+                    id="theme-toggle"
                     onClick={toggleTheme}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco w-full text-left transition-colors"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-dark-dourado-sol text-texto-branco w-full text-left"
                 >
                     <span className="material-symbols-outlined text-xl text-texto-branco">
                         {theme === 'dark' ? 'light_mode' : 'dark_mode'}
@@ -191,7 +206,7 @@ export const Sidebar = ({ onOpenSongGenerator }: SidebarProps) => {
 
                 <button
                     onClick={logout}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-red-500 text-texto-branco dark:text-red-500 dark:hover:text-white group w-full text-left transition-colors"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-dourado-sol dark:hover:bg-red-500 text-texto-branco dark:text-red-500 dark:hover:text-white group w-full text-left"
                 >
                     <span className="material-symbols-outlined text-xl text-texto-branco dark:text-red-500 group-hover:text-white">logout</span>
                     <span className="group-hover:text-white">Sair</span>
